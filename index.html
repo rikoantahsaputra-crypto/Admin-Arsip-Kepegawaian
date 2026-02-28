@@ -26,10 +26,11 @@ margin-right:15px;
 
 .layout{
 display:grid;
-grid-template-columns:1.5fr 1fr;
+grid-template-columns:1.6fr 1fr;
 gap:20px;
 }
 
+/* PANELS */
 .left-panel,.right-panel{
 background:#fff;
 padding:20px;
@@ -37,6 +38,7 @@ border-radius:16px;
 border:1px solid #e5e7eb;
 }
 
+/* SEARCH */
 .search-area{position:relative;margin-bottom:15px;}
 
 .search-area input{
@@ -44,6 +46,7 @@ width:100%;
 padding:14px;
 border-radius:12px;
 border:2px solid #1e3a8a;
+font-size:14px;
 }
 
 .suggestions{
@@ -52,7 +55,7 @@ background:#fff;
 width:100%;
 border:1px solid #e5e7eb;
 border-radius:10px;
-max-height:150px;
+max-height:160px;
 overflow-y:auto;
 z-index:10;
 }
@@ -67,7 +70,7 @@ background:#f3f4f6;
 }
 
 button{
-padding:10px 15px;
+padding:10px 16px;
 border:none;
 background:#1e3a8a;
 color:#fff;
@@ -76,14 +79,66 @@ cursor:pointer;
 margin-bottom:15px;
 }
 
+/* CARD */
 .card{
 border:1px solid #e5e7eb;
-padding:10px;
+padding:12px;
 border-radius:12px;
 margin-bottom:10px;
 font-size:13px;
+background:#fff;
 }
 
+/* SKELETON */
+.skeleton{
+border-radius:12px;
+height:90px;
+margin-bottom:10px;
+background:linear-gradient(
+90deg,
+#f0f0f0 25%,
+#e0e0e0 50%,
+#f0f0f0 75%
+);
+background-size:200% 100%;
+animation:shimmer 1.2s infinite;
+}
+
+@keyframes shimmer{
+0%{background-position:-200% 0;}
+100%{background-position:200% 0;}
+}
+
+/* LAYANAN */
+.right-panel h3{
+margin-bottom:15px;
+font-size:14px;
+color:#6b7280;
+text-transform:uppercase;
+}
+
+.menu{
+display:flex;
+align-items:center;
+padding:12px;
+border-radius:10px;
+border:1px solid #e5e7eb;
+margin-bottom:8px;
+cursor:pointer;
+transition:.15s;
+}
+
+.menu:hover{
+background:#1e3a8a;
+color:#fff;
+}
+
+.menu span{
+margin-right:8px;
+font-size:18px;
+}
+
+/* MOBILE */
 @media(max-width:900px){
 .layout{grid-template-columns:1fr;}
 }
@@ -100,6 +155,7 @@ font-size:13px;
 
 <div class="layout">
 
+<!-- LEFT -->
 <div class="left-panel">
 
 <div class="search-area">
@@ -113,12 +169,42 @@ font-size:13px;
 
 </div>
 
+<!-- RIGHT -->
 <div class="right-panel">
 <h3>Layanan</h3>
-<div onclick="openUrl('https://rikoantah.github.io/pangkat-rsds-aktive/')">👤 Pangkat</div>
-<div onclick="openUrl('https://rikoantah.github.io/Gaji-Berkala-RSDS-Soedarso/')">💰 Gaji Berkala</div>
-<div onclick="openUrl('https://rikoantah.github.io/Ukom-Rsds/')">📝 UKOM</div>
-<div onclick="openUrl('https://rikoantah.github.io/Jafung-D/')">💼 Jafung</div>
+
+<div class="menu" onclick="openUrl('https://rikoantah.github.io/pangkat-rsds-aktive/')">
+<span>👤</span> Pangkat
+</div>
+
+<div class="menu" onclick="openUrl('https://rikoantah.github.io/Gaji-Berkala-RSDS-Soedarso/')">
+<span>💰</span> Gaji Berkala
+</div>
+
+<div class="menu" onclick="openUrl('https://rikoantah.github.io/Ukom-Rsds/')">
+<span>📝</span> UKOM
+</div>
+
+<div class="menu" onclick="openUrl('https://rikoantah.github.io/Jafung-D/')">
+<span>💼</span> Jabatan Fungsional
+</div>
+
+<div class="menu" onclick="openUrl('https://rikoantahsaputra94-jpg.github.io/Tampilan-Cuti-Umpar/')">
+<span>📅</span> Cuti
+</div>
+
+<div class="menu" onclick="openUrl('https://script.google.com/macros/s/AKfycbwAwouQ9BK6S9GzQeFtkUxKQJY_iunIfS35Jfe0wYD8L7A6-C5InI7IkFW4eSOnEKQz/exec')">
+<span>🧮</span> Angka Kredit
+</div>
+
+<div class="menu" onclick="openUrl('https://rikoantah.github.io/sip-sib/')">
+<span>🪪</span> SIP / SIB
+</div>
+
+<div class="menu" onclick="openUrl('https://rikoantah.github.io/slks-d/')">
+<span>⭐</span> SLKS
+</div>
+
 </div>
 
 </div>
@@ -127,7 +213,6 @@ font-size:13px;
 <script>
 
 const GAS_URL="https://script.google.com/macros/s/AKfycbxyZIrqJrpcNoRreofctwrVVc_TVd8oJ1SadZZt7pqwGpxoA24pOfGrUw9vtuJXquD-/exec";
-
 let selectedName="";
 
 function goBack(){
@@ -148,7 +233,6 @@ body:JSON.stringify({mode:"suggest",keyword})
 .then(r=>r.json())
 .then(r=>{
 if(!r.status) return;
-
 let html="";
 r.data.forEach(name=>{
 html+=`<div onclick="selectName('${name}')">${name}</div>`;
@@ -166,19 +250,31 @@ document.getElementById("suggestions").innerHTML="";
 function searchArsip(){
 if(!selectedName) return;
 
+// 🔄 Skeleton loading
+document.getElementById("result").innerHTML=
+`<div class="skeleton"></div>
+ <div class="skeleton"></div>
+ <div class="skeleton"></div>`;
+
 fetch(GAS_URL,{
 method:"POST",
 body:JSON.stringify({mode:"search",nama:selectedName})
 })
 .then(r=>r.json())
 .then(r=>{
-if(!r.status) return;
+if(!r.status){
+document.getElementById("result").innerHTML="";
+return;
+}
 render(r.data);
 });
 }
 
 function render(data){
 let html="";
+if(!data.length){
+html="<div style='color:#9ca3af'>Tidak ada data</div>";
+}else{
 data.forEach(x=>{
 html+=`<div class="card"><b>${x.sheet}</b><br>`;
 Object.entries(x.detail).forEach(([k,v])=>{
@@ -190,6 +286,7 @@ html+=`<div>${k}: ${v}</div>`;
 });
 html+="</div>";
 });
+}
 document.getElementById("result").innerHTML=html;
 }
 
