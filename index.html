@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Admin Arsip RSDS</title>
+
+<style>
+body{
+margin:0;
+font-family:Segoe UI;
+background:#f4f6f9;
+color:#1f2937;
+}
+
+.wrapper{
+max-width:1000px;
+margin:auto;
+padding:20px;
+}
+
+.login-box{
+max-width:400px;
+margin:100px auto;
+background:#1e3a8a;
+padding:30px;
+border-radius:16px;
+color:#fff;
+text-align:center;
+}
+
+.login-box input{
+width:100%;
+padding:12px;
+margin:12px 0;
+border-radius:8px;
+border:none;
+}
+
+.login-box button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+background:#2563eb;
+color:#fff;
+font-weight:600;
+cursor:pointer;
+}
+
+.header{
+margin-bottom:20px;
+}
+
+.search-input{
+width:100%;
+padding:14px;
+border-radius:10px;
+border:1px solid #d1d5db;
+font-size:14px;
+}
+
+.card{
+background:#fff;
+border-radius:14px;
+padding:14px;
+margin-bottom:10px;
+border:1px solid #e5e7eb;
+font-size:13px;
+}
+
+.folder-link{
+display:inline-block;
+margin-top:6px;
+color:#2563eb;
+text-decoration:none;
+font-weight:600;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+<div id="loginBox" class="login-box">
+<h2>Admin Arsip RSDS</h2>
+<input type="password" id="password" placeholder="Masukkan Password">
+<button onclick="login()">Masuk</button>
+</div>
+
+<div id="adminPanel" style="display:none">
+
+<div class="header">
+<input id="search" class="search-input" placeholder="Cari NIP Pegawai..." oninput="searchData()">
+</div>
+
+<div id="result"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const GAS_URL="https://script.google.com/macros/s/AKfycbydfzQZavnM-NWSUUu4LsXcVq-cCknQKv3wAaBXx6OFZvyR6lyCW2gcJP3cKyiHb5VK/exec";
+let allData=[];
+
+function login(){
+const pass=document.getElementById("password").value.trim();
+if(!pass) return;
+
+fetch(GAS_URL,{
+method:"POST",
+body:JSON.stringify({password:pass})
+})
+.then(r=>r.json())
+.then(r=>{
+if(!r.status){
+alert("Password Salah");
+return;
+}
+allData=r.data;
+document.getElementById("loginBox").style.display="none";
+document.getElementById("adminPanel").style.display="block";
+render(allData);
+});
+}
+
+function searchData(){
+const keyword=document.getElementById("search").value.toLowerCase();
+const filtered=allData.filter(x=>{
+return String(x.detail.NIP||x.detail.nip||"")
+.toLowerCase().includes(keyword);
+});
+render(filtered);
+}
+
+function render(data){
+let html="";
+if(!data.length){
+html="<div style='text-align:center;color:#9ca3af'>Tidak ada data</div>";
+}else{
+data.forEach(x=>{
+html+=`<div class="card"><b>${x.sheet}</b><br>`;
+Object.entries(x.detail).forEach(([k,v])=>{
+if(String(v).startsWith("http")){
+html+=`<a href="${v}" target="_blank" class="folder-link">📂 Buka Folder</a>`;
+}else{
+html+=`<div>${k}: ${v}</div>`;
+}
+});
+html+="</div>";
+});
+}
+document.getElementById("result").innerHTML=html;
+}
+
+</script>
+
+</body>
+</html>
