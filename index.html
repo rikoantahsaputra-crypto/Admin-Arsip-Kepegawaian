@@ -6,168 +6,119 @@
 <title>Admin Kepegawaian RSDS</title>
 
 <style>
-body{
-margin:0;
-font-family:Segoe UI;
-background:#f4f6f9;
-color:#1f2937;
+body{margin:0;font-family:Segoe UI;background:#f4f6f9;}
+.wrapper{max-width:1200px;margin:auto;padding:20px;}
+
+.topbar{
+display:flex;
+align-items:center;
+margin-bottom:20px;
 }
 
-.wrapper{
-max-width:1200px;
-margin:auto;
-padding:20px;
+.back-btn{
+background:#1e3a8a;
+color:#fff;
+padding:8px 14px;
+border-radius:8px;
+cursor:pointer;
+margin-right:15px;
 }
 
 .layout{
 display:grid;
-grid-template-columns: 1.5fr 1fr;
+grid-template-columns:1.5fr 1fr;
 gap:20px;
 }
 
-/* LEFT SIDE */
-.left-panel{
+.left-panel,.right-panel{
 background:#fff;
 padding:20px;
 border-radius:16px;
 border:1px solid #e5e7eb;
 }
 
-.search-box{
-margin-bottom:20px;
-}
+.search-area{position:relative;margin-bottom:15px;}
 
-.search-box input{
+.search-area input{
 width:100%;
-padding:15px;
+padding:14px;
 border-radius:12px;
 border:2px solid #1e3a8a;
-font-size:15px;
-outline:none;
 }
 
-.search-box input:focus{
-box-shadow:0 0 0 4px rgba(37,99,235,.2);
+.suggestions{
+position:absolute;
+background:#fff;
+width:100%;
+border:1px solid #e5e7eb;
+border-radius:10px;
+max-height:150px;
+overflow-y:auto;
+z-index:10;
+}
+
+.suggestions div{
+padding:8px 12px;
+cursor:pointer;
+}
+
+.suggestions div:hover{
+background:#f3f4f6;
+}
+
+button{
+padding:10px 15px;
+border:none;
+background:#1e3a8a;
+color:#fff;
+border-radius:8px;
+cursor:pointer;
+margin-bottom:15px;
 }
 
 .card{
-background:#fff;
-border-radius:12px;
-padding:12px;
-margin-bottom:10px;
 border:1px solid #e5e7eb;
+padding:10px;
+border-radius:12px;
+margin-bottom:10px;
 font-size:13px;
 }
 
-.folder-link{
-display:inline-block;
-margin-top:6px;
-color:#2563eb;
-text-decoration:none;
-font-weight:600;
-}
-
-/* RIGHT SIDE */
-.right-panel{
-background:#fff;
-padding:20px;
-border-radius:16px;
-border:1px solid #e5e7eb;
-height:fit-content;
-}
-
-.right-panel h3{
-margin-bottom:15px;
-font-size:14px;
-color:#6b7280;
-text-transform:uppercase;
-}
-
-.menu{
-background:#f9fafb;
-border-radius:12px;
-padding:14px;
-margin-bottom:10px;
-cursor:pointer;
-border:1px solid #e5e7eb;
-transition:.15s;
-}
-
-.menu:hover{
-background:#1e3a8a;
-color:#fff;
-}
-
-.menu span{
-font-size:18px;
-margin-right:6px;
-}
-
-/* MOBILE */
 @media(max-width:900px){
-.layout{
-grid-template-columns:1fr;
-}
+.layout{grid-template-columns:1fr;}
 }
 </style>
 </head>
-
 <body>
 
 <div class="wrapper">
 
-<h2 style="margin-bottom:20px;">Admin Kepegawaian RSDS</h2>
+<div class="topbar">
+<div class="back-btn" onclick="goBack()">⬅ Back</div>
+<h2>Admin Kepegawaian RSDS</h2>
+</div>
 
 <div class="layout">
 
-<!-- LEFT -->
 <div class="left-panel">
 
-<div class="search-box">
-<input id="search" placeholder="🔍 Cari Nama Pegawai..." oninput="searchData()">
+<div class="search-area">
+<input id="searchInput" placeholder="Ketik Nama Pegawai..." oninput="getSuggestions()">
+<div id="suggestions" class="suggestions"></div>
 </div>
+
+<button onclick="searchArsip()">Cari</button>
 
 <div id="result"></div>
 
 </div>
 
-<!-- RIGHT -->
 <div class="right-panel">
-
 <h3>Layanan</h3>
-
-<div class="menu" onclick="openUrl('https://rikoantah.github.io/pangkat-rsds-aktive/')">
-<span>👤</span> Pangkat
-</div>
-
-<div class="menu" onclick="openUrl('https://rikoantah.github.io/Gaji-Berkala-RSDS-Soedarso/')">
-<span>💰</span> Gaji Berkala
-</div>
-
-<div class="menu" onclick="openUrl('https://rikoantah.github.io/Ukom-Rsds/')">
-<span>📝</span> UKOM
-</div>
-
-<div class="menu" onclick="openUrl('https://rikoantah.github.io/Jafung-D/')">
-<span>💼</span> Jabatan Fungsional
-</div>
-
-<div class="menu" onclick="openUrl('https://rikoantahsaputra94-jpg.github.io/Tampilan-Cuti-Umpar/')">
-<span>📅</span> Cuti
-</div>
-
-<div class="menu" onclick="openUrl('https://script.google.com/macros/s/AKfycbwAwouQ9BK6S9GzQeFtkUxKQJY_iunIfS35Jfe0wYD8L7A6-C5InI7IkFW4eSOnEKQz/exec')">
-<span>🧮</span> Angka Kredit
-</div>
-
-<div class="menu" onclick="openUrl('https://rikoantah.github.io/sip-sib/')">
-<span>🪪</span> SIP / SIB
-</div>
-
-<div class="menu" onclick="openUrl('https://rikoantah.github.io/slks-d/')">
-<span>⭐</span> SLKS
-</div>
-
+<div onclick="openUrl('https://rikoantah.github.io/pangkat-rsds-aktive/')">👤 Pangkat</div>
+<div onclick="openUrl('https://rikoantah.github.io/Gaji-Berkala-RSDS-Soedarso/')">💰 Gaji Berkala</div>
+<div onclick="openUrl('https://rikoantah.github.io/Ukom-Rsds/')">📝 UKOM</div>
+<div onclick="openUrl('https://rikoantah.github.io/Jafung-D/')">💼 Jafung</div>
 </div>
 
 </div>
@@ -175,52 +126,70 @@ grid-template-columns:1fr;
 
 <script>
 
-const GAS_URL="https://script.google.com/macros/s/AKfycbyZMZ0c7BYjmNw7iKhddAJx4Ncx4AMG0uErdPfm8bLhnw_Mw2TVyBMjLxP5K9K846Bw/exec";
-let timer=null;
+const GAS_URL="https://script.google.com/macros/s/AKfycbxyZIrqJrpcNoRreofctwrVVc_TVd8oJ1SadZZt7pqwGpxoA24pOfGrUw9vtuJXquD-/exec";
 
-function searchData(){
-clearTimeout(timer);
+let selectedName="";
 
-timer=setTimeout(()=>{
-const keyword=document.getElementById("search").value.trim();
+function goBack(){
+window.location.href="ISI_URL_BACK_DISINI";
+}
 
+function getSuggestions(){
+const keyword=document.getElementById("searchInput").value.trim();
 if(keyword.length<2){
-document.getElementById("result").innerHTML="";
+document.getElementById("suggestions").innerHTML="";
 return;
 }
 
 fetch(GAS_URL,{
 method:"POST",
-body:JSON.stringify({nama:keyword})
+body:JSON.stringify({mode:"suggest",keyword})
 })
 .then(r=>r.json())
 .then(r=>{
-if(!r.status){
-document.getElementById("result").innerHTML="";
-return;
+if(!r.status) return;
+
+let html="";
+r.data.forEach(name=>{
+html+=`<div onclick="selectName('${name}')">${name}</div>`;
+});
+document.getElementById("suggestions").innerHTML=html;
+});
 }
+
+function selectName(name){
+selectedName=name;
+document.getElementById("searchInput").value=name;
+document.getElementById("suggestions").innerHTML="";
+}
+
+function searchArsip(){
+if(!selectedName) return;
+
+fetch(GAS_URL,{
+method:"POST",
+body:JSON.stringify({mode:"search",nama:selectedName})
+})
+.then(r=>r.json())
+.then(r=>{
+if(!r.status) return;
 render(r.data);
 });
-},400);
 }
 
 function render(data){
 let html="";
-if(!data.length){
-html="<div style='text-align:center;color:#9ca3af'>Tidak ada data</div>";
-}else{
 data.forEach(x=>{
 html+=`<div class="card"><b>${x.sheet}</b><br>`;
 Object.entries(x.detail).forEach(([k,v])=>{
 if(String(v).startsWith("http")){
-html+=`<a href="${v}" target="_blank" class="folder-link">📂 Buka Folder</a>`;
+html+=`<div><a href="${v}" target="_blank">📂 Buka Folder</a></div>`;
 }else{
 html+=`<div>${k}: ${v}</div>`;
 }
 });
 html+="</div>";
 });
-}
 document.getElementById("result").innerHTML=html;
 }
 
